@@ -318,9 +318,14 @@ h2 {
 }
 
 .hero-image,
+.hero-image-mobile,
 .hero-shade {
     position: absolute;
     inset: 0;
+}
+
+.hero-image-mobile {
+    display: none;
 }
 
 .hero-image {
@@ -395,8 +400,8 @@ h2 {
 
 .intro-grid {
     display: grid;
-    grid-template-columns: 1.35fr .65fr;
-    gap: 12vw;
+    grid-template-columns: 1.1fr .9fr;
+    gap: 8vw;
     align-items: end;
     max-width: 1300px;
     margin: 95px auto 0;
@@ -407,12 +412,14 @@ h2 {
 }
 
 .intro-copy {
-    max-width: 390px;
+    max-width: 520px;
     color: var(--muted);
+    font-size: 20px;
+    line-height: 1.75;
 }
 
 .intro-copy p {
-    margin-bottom: 25px;
+    margin-bottom: 30px;
 }
 
 .signature {
@@ -532,15 +539,15 @@ h2 {
 
 .event-section {
     display: grid;
-    grid-template-columns: .9fr 1.1fr;
-    min-height: 850px;
+    grid-template-columns: 1.08fr .92fr;
+    min-height: 1000px;
     background: #ded3c4;
 }
 
 .event-copy {
     display: grid;
     align-content: center;
-    padding: 9vw 7vw;
+    padding: 8vw 6vw;
 }
 
 .event-copy h2 {
@@ -551,6 +558,48 @@ h2 {
 .event-copy h2 span {
     font-size: .72em;
     color: var(--ink);
+}
+
+.event-list {
+    display: grid;
+    gap: 22px;
+}
+
+.event-card {
+    padding: 28px;
+    border: 1px solid rgba(36, 32, 28, .22);
+    background: rgba(251, 248, 242, .34);
+}
+
+.event-card-heading {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.event-card-heading h3 {
+    margin: 8px 0 22px;
+    color: var(--wine);
+    font: 500 32px/1 var(--serif);
+}
+
+.event-card-heading h3 span {
+    color: var(--ink);
+}
+
+.event-type,
+.event-number {
+    margin: 0;
+    color: var(--wine);
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+}
+
+.event-number {
+    color: var(--muted);
 }
 
 .event-details {
@@ -583,6 +632,22 @@ h2 {
     margin: 0;
     color: var(--muted);
     font-size: 10px;
+}
+
+.ceremony-note {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    color: var(--wine);
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.ceremony-note p {
+    margin: 0;
+    color: var(--muted);
 }
 
 .outline-button {
@@ -679,40 +744,101 @@ h2 {
 
 .gallery-grid {
     display: grid;
-    grid-template-columns: 1.15fr .425fr .425fr;
-    grid-template-rows: 350px 350px;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(21, 72px);
     gap: 18px;
 }
 
 .gallery-item {
+    position: relative;
+    display: block;
+    min-width: 0;
+    padding: 0;
     border: 0;
     cursor: zoom-in;
     overflow: hidden;
-    background-position: center;
-    background-size: cover;
-    transition: filter .4s ease, transform .4s ease;
+    background: #dfd5c7;
 }
 
-.gallery-item:hover {
-    filter: saturate(.8) brightness(.9);
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: filter .5s ease, transform .7s cubic-bezier(.22, 1, .36, 1);
 }
 
-.gallery-tall {
-    grid-row: span 2;
-    background-image: url("image/h%C3%ACnh%20c%C6%B0%E1%BB%9Bi%20ch%E1%BB%A5p%20d%E1%BB%8Dc.jpg");
+.gallery-item span {
+    position: absolute;
+    left: 14px;
+    bottom: 12px;
+    padding: 5px 8px;
+    color: white;
+    background: rgba(36, 32, 28, .45);
+    backdrop-filter: blur(5px);
+    font-size: 7px;
+    font-weight: 500;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity .35s ease, transform .35s ease;
 }
 
-.gallery-wide {
-    grid-column: span 2;
-    background-image: url("image/h%C3%ACnh%20c%C6%B0%E1%BB%9Bi%20ch%E1%BB%A5p%20ngang.jpg");
+.gallery-item:hover img {
+    filter: saturate(.86) brightness(.88);
+    transform: scale(1.025);
 }
 
-.gallery-small {
-    background-image: url("image/h%C3%ACnh%20c%C6%B0%E1%BB%9Bi%20ch%E1%BB%A5p%20c%E1%BA%ADn.jpg");
+.gallery-item:hover span,
+.gallery-item:focus-visible span {
+    opacity: 1;
+    transform: none;
 }
 
-.gallery-small:last-child {
-    background-image: url("image/h%C3%ACnh%20c%C6%B0%E1%BB%9Bi%20ch%E1%BB%A5p%20%E1%BB%9F%20khu%20hoa%20d%C3%A3%20qu%E1%BB%B3.jpg");
+.gallery-feature {
+    grid-column: 1 / 6;
+    grid-row: 1 / 8;
+}
+
+.gallery-landscape {
+    grid-column: 6 / 13;
+    grid-row: 1 / 5;
+}
+
+.gallery-red-one {
+    grid-column: 6 / 9;
+    grid-row: 5 / 11;
+}
+
+.gallery-red-two {
+    grid-column: 9 / 13;
+    grid-row: 5 / 12;
+}
+
+.gallery-classic {
+    grid-column: 1 / 6;
+    grid-row: 8 / 15;
+}
+
+.gallery-white {
+    grid-column: 6 / 10;
+    grid-row: 12 / 19;
+}
+
+.gallery-close {
+    grid-column: 10 / 13;
+    grid-row: 12 / 16;
+}
+
+.gallery-kiss {
+    grid-column: 10 / 13;
+    grid-row: 16 / 22;
+}
+
+.gallery-finale {
+    grid-column: 1 / 6;
+    grid-row: 15 / 22;
 }
 
 .film {
@@ -875,48 +1001,93 @@ dialog::backdrop {
 }
 
 .lightbox {
+    width: 100vw;
+    max-width: none;
+    height: 100vh;
+    max-height: none;
     overflow: visible;
+}
+
+.lightbox figure {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    display: grid;
+    place-items: center;
 }
 
 .lightbox img {
     display: block;
     max-width: 88vw;
-    max-height: 88vh;
+    max-height: 86vh;
     object-fit: contain;
+}
+
+.lightbox figcaption {
+    position: fixed;
+    left: 50%;
+    bottom: 18px;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 8px;
+    font-weight: 500;
+    letter-spacing: .25em;
 }
 
 .lightbox button,
 .video-modal button {
     position: fixed;
-    top: 20px;
-    right: 25px;
     border: 0;
     cursor: pointer;
     color: white;
     background: none;
+}
+
+.lightbox-close,
+.video-modal button {
+    top: 20px;
+    right: 25px;
     font: 300 35px/1 var(--sans);
 }
 
+.lightbox-nav {
+    z-index: 2;
+    top: 50%;
+    width: 52px;
+    height: 52px;
+    transform: translateY(-50%);
+    border: 1px solid rgba(255, 255, 255, .35) !important;
+    border-radius: 50%;
+    font: 300 20px/1 var(--sans);
+}
+
+.lightbox-prev {
+    left: 25px;
+}
+
+.lightbox-next {
+    right: 25px;
+}
+
 .video-modal {
-    width: min(90vw, 800px);
+    width: min(92vw, 1100px);
     color: white;
     text-align: center;
 }
 
-.video-modal div {
-    padding: 80px 40px;
+.video-frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
     border: 1px solid rgba(255, 255, 255, .35);
-    background: var(--wine-dark);
+    background: #000;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, .45);
 }
 
-.video-modal h2 {
-    margin: 20px 0;
-    font-size: 55px;
-}
-
-.video-modal p:last-child {
-    margin: 0;
-    opacity: .7;
+.video-frame iframe {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border: 0;
 }
 
 .reveal {
@@ -983,7 +1154,10 @@ dialog::backdrop {
     }
 
     .hero-meta {
+        flex-wrap: wrap;
         gap: 10px;
+        max-width: 520px;
+        margin: auto;
     }
 
     .hero-meta strong {
@@ -1003,6 +1177,11 @@ dialog::backdrop {
     .intro-grid {
         gap: 55px;
         margin-top: 60px;
+    }
+
+    .intro-copy {
+        max-width: 680px;
+        font-size: 20px;
     }
 
     .countdown-photo {
@@ -1027,12 +1206,16 @@ dialog::backdrop {
 
     .event-photo {
         grid-row: 1;
-        min-height: 62vh;
+        min-height: min(62vh, 620px);
         margin: 18px;
     }
 
     .event-copy {
         padding: 65px 22px 80px;
+    }
+
+    .event-copy h2 {
+        margin-bottom: 45px;
     }
 
     .timeline {
@@ -1049,14 +1232,48 @@ dialog::backdrop {
     }
 
     .gallery-grid {
-        display: block;
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: none;
+        grid-auto-rows: 48vw;
+        gap: 12px;
     }
 
     .gallery-item {
-        display: block;
-        width: 100%;
-        height: 65vh;
-        margin: 0 0 15px;
+        grid-column: auto;
+        grid-row: auto;
+    }
+
+    .gallery-feature,
+    .gallery-landscape,
+    .gallery-classic,
+    .gallery-finale {
+        grid-column: span 2;
+    }
+
+    .gallery-feature,
+    .gallery-classic,
+    .gallery-finale {
+        grid-row: span 2;
+    }
+
+    .gallery-landscape {
+        grid-row: span 1;
+    }
+
+    .gallery-red-one,
+    .gallery-red-two,
+    .gallery-white,
+    .gallery-kiss {
+        grid-row: span 2;
+    }
+
+    .gallery-close {
+        grid-row: span 1;
+    }
+
+    .gallery-item span {
+        opacity: 1;
+        transform: none;
     }
 
     .film {
@@ -1078,8 +1295,25 @@ dialog::backdrop {
 }
 
 @media (max-width: 520px) {
+    body {
+        font-size: 13px;
+    }
+
+    .section-pad {
+        padding: 72px 18px;
+    }
+
+    .site-header {
+        padding: 16px 16px;
+    }
+
+    .header-date {
+        font-size: 7px;
+        letter-spacing: .12em;
+    }
+
     h2 {
-        font-size: 47px;
+        font-size: clamp(40px, 13vw, 47px);
     }
 
     .script {
@@ -1103,9 +1337,65 @@ dialog::backdrop {
         font-size: 8px;
     }
 
+    .hero-copy {
+        padding: 100px 18px 90px;
+    }
+
+    .hero-image {
+        inset: 8vh 0;
+        z-index: 1;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        animation: none;
+    }
+
+    .hero-image-mobile {
+        display: block;
+        background: url("image/h%C3%ACnh%20c%C6%B0%E1%BB%9Bi%20ch%E1%BB%A5p%20ngang.jpg") center/cover;
+        filter: blur(18px) saturate(.78) brightness(.72);
+        transform: scale(1.12);
+    }
+
+    .hero-shade {
+        z-index: 2;
+        background: linear-gradient(to bottom, rgba(24, 13, 10, .2), rgba(24, 13, 10, .02) 42%, rgba(24, 13, 10, .48));
+    }
+
+    .hero-copy,
+    .scroll-cue {
+        z-index: 3;
+    }
+
+    .hero-copy h1 {
+        font-size: clamp(62px, 20vw, 88px);
+    }
+
     .hero-meta {
+        display: grid;
+        gap: 7px;
         font-size: 7px;
-        letter-spacing: .12em;
+        letter-spacing: .1em;
+    }
+
+    .hero-meta strong {
+        padding: 7px 12px;
+        border: 0;
+        border-top: 1px solid rgba(255, 255, 255, .5);
+        border-bottom: 1px solid rgba(255, 255, 255, .5);
+    }
+
+    .intro-copy {
+        font-size: 18px;
+        line-height: 1.7;
+    }
+
+    .countdown-photo {
+        min-height: 52vh;
+    }
+
+    .countdown-panel {
+        padding: 64px 18px;
     }
 
     .countdown {
@@ -1122,18 +1412,100 @@ dialog::backdrop {
 
     .event-details {
         grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .event-card {
+        padding: 24px 18px;
+    }
+
+    .event-card-heading h3 {
+        font-size: 29px;
+    }
+
+    .event-card-heading h3 span {
+        display: block;
+        margin-top: 5px;
+    }
+
+    .ceremony-note {
+        display: grid;
+        gap: 3px;
+    }
+
+    .event-photo {
+        min-height: 48vh;
+        margin: 12px;
     }
 
     .family-card {
         padding: 42px 20px;
     }
 
-    .gallery-item {
-        height: 50vh;
+    .family-heading {
+        margin: 55px auto 65px;
+    }
+
+    .story-heading {
+        margin: 55px 0 70px;
+    }
+
+    .gallery-heading {
+        margin-bottom: 45px;
+    }
+
+    .gallery-heading h2 {
+        margin-top: 35px;
+    }
+
+    .gallery-grid {
+        grid-auto-rows: 54vw;
+        gap: 8px;
+    }
+
+    .gallery-item span {
+        left: 8px;
+        bottom: 8px;
+        padding: 4px 6px;
+        font-size: 6px;
+    }
+
+    .lightbox img {
+        max-width: 100vw;
+        max-height: 82vh;
+    }
+
+    .lightbox-nav {
+        top: auto;
+        bottom: 18px;
+        width: 42px;
+        height: 42px;
+        transform: none;
+        background: rgba(36, 32, 28, .5);
+    }
+
+    .lightbox-prev {
+        left: 18px;
+    }
+
+    .lightbox-next {
+        right: 18px;
+    }
+
+    .video-modal {
+        width: 100vw;
     }
 
     .closing h2 {
-        font-size: 43px;
+        font-size: clamp(38px, 12vw, 43px);
+    }
+
+    footer {
+        padding: 24px 18px;
+    }
+
+    footer > a:last-child {
+        font-size: 7px;
     }
 }
 
