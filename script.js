@@ -53,11 +53,16 @@ const presentationStops = [
     ".closing"
 ].map((selector) => document.querySelector(selector)).filter(Boolean);
 const presentationHome = document.querySelector("#home");
-const presentationDelay = 45000;
+const presentationGallery = document.querySelector("#gallery");
+const presentationDelay = 39999;
+const gallerySlideDelay = 9999;
+const galleryOpenDelay = 3999;
 let presentationIndex = 0;
 let presentationTimer;
+let galleryPresentationTimer;
+let isGalleryPresentation = false;
 
-function schedulePresentationScroll() {
+function schedulePresentationScroll(delay = presentationDelay) {
     clearTimeout(presentationTimer);
 
     presentationTimer = setTimeout(() => {
@@ -77,8 +82,13 @@ function schedulePresentationScroll() {
         presentationIndex = presentationIndex < presentationStops.length
             ? presentationIndex + 1
             : 0;
-        schedulePresentationScroll();
-    }, presentationDelay);
+
+        if (nextSection === presentationGallery) {
+            galleryPresentationTimer = setTimeout(startGalleryPresentation, galleryOpenDelay);
+        } else {
+            schedulePresentationScroll();
+        }
+    }, delay);
 }
 
 function syncPresentationWithCurrentPosition() {
@@ -146,6 +156,38 @@ function showGalleryImage(index) {
     lightboxCounter.textContent = `${String(currentImageIndex + 1).padStart(2, "0")} / ${String(galleryItems.length).padStart(2, "0")}`;
 }
 
+function startGalleryPresentation() {
+    if (!galleryItems.length || videoModal.open) {
+        schedulePresentationScroll();
+        return;
+    }
+
+    isGalleryPresentation = true;
+    showGalleryImage(0);
+    if (!lightbox.open) lightbox.showModal();
+    galleryPresentationTimer = setTimeout(showNextPresentationImage, gallerySlideDelay);
+}
+
+function showNextPresentationImage() {
+    if (!isGalleryPresentation) return;
+
+    if (currentImageIndex < galleryItems.length - 1) {
+        showGalleryImage(currentImageIndex + 1);
+        galleryPresentationTimer = setTimeout(showNextPresentationImage, gallerySlideDelay);
+        return;
+    }
+
+    finishGalleryPresentation();
+}
+
+function finishGalleryPresentation() {
+    clearTimeout(galleryPresentationTimer);
+    const wasRunning = isGalleryPresentation;
+    isGalleryPresentation = false;
+    if (lightbox.open) lightbox.close();
+    if (wasRunning) schedulePresentationScroll(galleryOpenDelay);
+}
+
 galleryItems.forEach((item, index) => {
     item.addEventListener("click", () => {
         showGalleryImage(index);
@@ -159,6 +201,9 @@ document.querySelector("#nextImage").addEventListener("click", () => showGallery
 
 lightbox.addEventListener("click", (event) => {
     if (event.target === lightbox) lightbox.close();
+});
+lightbox.addEventListener("close", () => {
+    if (isGalleryPresentation) finishGalleryPresentation();
 });
 
 lightbox.addEventListener("keydown", (event) => {
