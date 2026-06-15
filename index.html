@@ -64,9 +64,11 @@
                     <span>Đồng Tháp &amp; Vĩnh Long</span>
                 </div>
             </div>
-            <a class="scroll-cue" href="#intro" aria-label="Xem tiếp">
-                <span>Khám phá</span>
-                <i></i>
+            <a class="scroll-cue" id="swipeReminder" href="#intro" aria-label="Vuốt lên để xem tiếp">
+                <span class="scroll-cue-handle" aria-hidden="true"></span>
+                <span class="scroll-cue-desktop">Cuộn để khám phá</span>
+                <span class="scroll-cue-mobile">Vuốt lên để khám phá</span>
+                <i aria-hidden="true">↑</i>
             </a>
         </section>
 
@@ -279,7 +281,13 @@
                     <p class="eyebrow">The wedding film</p>
                     <h2>Chuyện tình<br>qua những thước phim</h2>
                     <button class="play-button" id="playFilm" type="button" aria-label="Phát video">
-                        <span>▶</span> Xem phim
+                        <span class="play-icon" aria-hidden="true">
+                            <svg viewBox="0 0 48 48" focusable="false">
+                                <circle cx="24" cy="24" r="22"></circle>
+                                <path d="M20 16.8 33 24 20 31.2Z"></path>
+                            </svg>
+                        </span>
+                        <span class="play-label">Xem phim</span>
                     </button>
                 </div>
             </div>

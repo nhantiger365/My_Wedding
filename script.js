@@ -4,6 +4,27 @@ const openInvitation = document.querySelector("#openInvitation");
 const openHint = document.querySelector("#openHint");
 const audio = document.querySelector("#weddingMusic");
 const musicToggle = document.querySelector("#musicToggle");
+const hero = document.querySelector("#home");
+const swipeReminder = document.querySelector("#swipeReminder");
+let swipeReminderTimer;
+let swipeReminderDismissed = false;
+
+function showSwipeReminder() {
+    clearTimeout(swipeReminderTimer);
+    swipeReminderTimer = setTimeout(() => {
+        if (!document.body.classList.contains("locked")
+            && !swipeReminderDismissed
+            && hero.getBoundingClientRect().bottom > window.innerHeight * 0.65) {
+            swipeReminder.classList.add("is-active");
+        }
+    }, 2000);
+}
+
+function hideSwipeReminder() {
+    clearTimeout(swipeReminderTimer);
+    swipeReminderDismissed = true;
+    swipeReminder.classList.remove("is-active");
+}
 
 function setMusicState(playing) {
     if (playing) {
@@ -31,6 +52,8 @@ function revealInvitation() {
         document.body.classList.remove("locked");
         sessionStorage.setItem("invitationOpened", "true");
         schedulePresentationScroll();
+        swipeReminderDismissed = false;
+        showSwipeReminder();
     }, 1500);
 }
 
@@ -40,7 +63,23 @@ openHint.addEventListener("click", revealInvitation);
 if (sessionStorage.getItem("invitationOpened") === "true") {
     gate.remove();
     document.body.classList.remove("locked");
+    showSwipeReminder();
 }
+
+const heroReminderObserver = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting && entry.intersectionRatio > 0.65) {
+        swipeReminderDismissed = false;
+        showSwipeReminder();
+    } else {
+        swipeReminder.classList.remove("is-active");
+    }
+}, { threshold: [0, 0.65] });
+
+heroReminderObserver.observe(hero);
+swipeReminder.addEventListener("click", hideSwipeReminder);
+["wheel", "touchstart", "keydown"].forEach((eventName) => {
+    window.addEventListener(eventName, hideSwipeReminder, { passive: true });
+});
 
 const presentationStops = [
     "#intro",
