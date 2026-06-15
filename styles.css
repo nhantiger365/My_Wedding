@@ -808,7 +808,7 @@ h2 {
 
 .gallery-red-one {
     grid-column: 6 / 9;
-    grid-row: 5 / 11;
+    grid-row: 5 / 12;
 }
 
 .gallery-red-two {
@@ -823,7 +823,7 @@ h2 {
 
 .gallery-white {
     grid-column: 6 / 10;
-    grid-row: 12 / 19;
+    grid-row: 12 / 22;
 }
 
 .gallery-close {
@@ -1235,6 +1235,7 @@ dialog::backdrop {
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: none;
         grid-auto-rows: 48vw;
+        grid-auto-flow: dense;
         gap: 12px;
     }
 
@@ -1268,6 +1269,7 @@ dialog::backdrop {
     }
 
     .gallery-close {
+        grid-column: span 2;
         grid-row: span 1;
     }
 
