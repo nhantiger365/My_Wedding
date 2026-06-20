@@ -93,6 +93,7 @@ const presentationStops = [
 ].map((selector) => document.querySelector(selector)).filter(Boolean);
 const presentationHome = document.querySelector("#home");
 const presentationGallery = document.querySelector("#gallery");
+const presentationFilm = document.querySelector(".film");
 const presentationDelay = 39999;
 const gallerySlideDelay = 9999;
 const galleryOpenDelay = 3999;
@@ -124,6 +125,8 @@ function schedulePresentationScroll(delay = presentationDelay) {
 
         if (nextSection === presentationGallery) {
             galleryPresentationTimer = setTimeout(startGalleryPresentation, galleryOpenDelay);
+        } else if (nextSection === presentationFilm) {
+            setTimeout(() => openWeddingFilm({ presentation: true }), galleryOpenDelay);
         } else {
             schedulePresentationScroll();
         }
@@ -261,28 +264,101 @@ lightbox.addEventListener("touchend", (event) => {
 }, { passive: true });
 
 const videoModal = document.querySelector("#videoModal");
-const weddingFilm = document.querySelector("#weddingFilm");
-const weddingFilmUrl = "https://www.youtube-nocookie.com/embed/ieLVZYATjxk?autoplay=1&rel=0";
+const weddingFilmVideoId = "gy6PGDM5UxU";
+let youtubePlayer;
+let youtubePlayerReady = false;
+let youtubeApiLoading = false;
+let pendingFilmPlayback = false;
+let isPresentationFilm = false;
+let resumeMusicAfterFilm = false;
+let suppressVideoCloseHandler = false;
 
-function openWeddingFilm() {
+function ensureYouTubePlayer() {
+    if (youtubePlayer) return;
+
+    window.onYouTubeIframeAPIReady = () => {
+        youtubePlayer = new YT.Player("weddingFilm", {
+            host: "https://www.youtube-nocookie.com",
+            videoId: weddingFilmVideoId,
+            playerVars: {
+                rel: 0,
+                playsinline: 1,
+                modestbranding: 1,
+                origin: window.location.origin
+            },
+            events: {
+                onReady: () => {
+                    youtubePlayerReady = true;
+                    youtubePlayer.getIframe().setAttribute("allow", "autoplay; encrypted-media; picture-in-picture; fullscreen");
+                    youtubePlayer.getIframe().setAttribute("title", "Video cưới của Nhân và Trúc");
+                    if (pendingFilmPlayback) playWeddingFilmVideo();
+                },
+                onStateChange: (event) => {
+                    if (event.data === YT.PlayerState.ENDED) closeWeddingFilm();
+                }
+            }
+        });
+    };
+
+    if (window.YT && window.YT.Player) {
+        window.onYouTubeIframeAPIReady();
+        return;
+    }
+
+    if (!youtubeApiLoading) {
+        youtubeApiLoading = true;
+        const script = document.createElement("script");
+        script.src = "https://www.youtube.com/iframe_api";
+        document.head.appendChild(script);
+    }
+}
+
+function playWeddingFilmVideo() {
+    pendingFilmPlayback = true;
+    ensureYouTubePlayer();
+    if (!youtubePlayerReady) return;
+
+    pendingFilmPlayback = false;
+    youtubePlayer.loadVideoById(weddingFilmVideoId);
+    youtubePlayer.playVideo();
+}
+
+function openWeddingFilm(options = {}) {
+    isPresentationFilm = Boolean(options.presentation);
+    resumeMusicAfterFilm = !audio.paused;
     audio.pause();
     setMusicState(false);
-    weddingFilm.src = weddingFilmUrl;
-    videoModal.showModal();
+    if (!videoModal.open) videoModal.showModal();
+    playWeddingFilmVideo();
+}
+
+function finishWeddingFilm() {
+    pendingFilmPlayback = false;
+    if (youtubePlayerReady) youtubePlayer.stopVideo();
+
+    const shouldContinuePresentation = isPresentationFilm;
+    const shouldResumeMusic = resumeMusicAfterFilm;
+    isPresentationFilm = false;
+    resumeMusicAfterFilm = false;
+
+    if (shouldResumeMusic) playWeddingMusic();
+    if (shouldContinuePresentation) schedulePresentationScroll(galleryOpenDelay);
 }
 
 function closeWeddingFilm() {
-    videoModal.close();
-    weddingFilm.src = "";
+    suppressVideoCloseHandler = true;
+    if (videoModal.open) videoModal.close();
+    suppressVideoCloseHandler = false;
+    finishWeddingFilm();
 }
 
-document.querySelector("#playFilm").addEventListener("click", openWeddingFilm);
+document.querySelector("#playFilm").addEventListener("click", () => openWeddingFilm());
 document.querySelector("#closeVideo").addEventListener("click", closeWeddingFilm);
 videoModal.addEventListener("click", (event) => {
     if (event.target === videoModal) closeWeddingFilm();
 });
 videoModal.addEventListener("close", () => {
-    weddingFilm.src = "";
+    if (!suppressVideoCloseHandler) finishWeddingFilm();
 });
 
 musicToggle.addEventListener("click", () => {
